@@ -303,41 +303,41 @@ configureコマンドを実行すると、Makefile.inを雛形にして、Makefi
 ここで、一つ言っておきますが、手順を一つでも逆にしたりすると、途端に動かなくなります。
 お気をつけ下さい・・・。
 
-1. `configure.ac`の雛形を作成
+(1) `configure.ac`の雛形を作成
 ```
 autoscan 
 ```
-2. `configure.scan`を改名
+(2) `configure.scan`を改名
 ```
 mv configure.scan configure.ac
 ```
-3. `Makefile.am`を作成
+(3) `Makefile.am`を作成
 ```Makefile.am
 bin_PROGRAMS=adder
 adder_SOURCES=src1.c src2.c
 ```
-4. `automake`を利用することを`configure.ac`へ追記
+(4) `automake`を利用することを`configure.ac`へ追記
 ```configure.ac
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile])
 ```
-5. `automake`に必要なm4ライブラリを用意
+(5) `automake`に必要なm4ライブラリを用意
 ```
 aclocal
 ```
-6. `automake`に必要なツールをインストール
+(6) `automake`に必要なツールをインストール
 ```
 automake -a -c 
 ```
-7. `automake`で必須とされるファイルを準備
+(7) `automake`で必須とされるファイルを準備
 ```
 touch NEWS README AUTHORS ChangeLog
 ```
-8. `Makefile.in`を作成
+(8) `Makefile.in`を作成
 ```
 automake
 ```
-9. `configure`を作成
+(9) `configure`を作成
 ```
 autoconf
 ```
