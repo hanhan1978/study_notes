@@ -412,10 +412,10 @@ hanhan1978が学習に用いた本達です。良書厳選。
 
 + プログラミング言語C  
 <img src="http://ecx.images-amazon.com/images/I/41W69WGATNL.jpg" width='200'>
-+ Head First C
++ Head First C  
 <img src="http://www.oreilly.co.jp/books/images/picture_large978-4-87311-609-9.jpeg" width='200'>
-+ 詳説Cポインタ
++ 詳説Cポインタ  
 <img src="http://www.oreilly.co.jp/books/images/picture_large978-4-87311-656-3.jpeg" width='200'>
-+ エキスパートCプログラミング―知られざるCの深層
++ エキスパートCプログラミング―知られざるCの深層  
 <img src="http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg" width='200'>
 
