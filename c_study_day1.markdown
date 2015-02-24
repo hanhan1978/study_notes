@@ -410,12 +410,12 @@ y = 4;
 # 参考図書
 hanhan1978が学習に用いた本達です。良書厳選。
 
-+ プログラミング言語C
-![プログラミング言語C](http://ecx.images-amazon.com/images/I/41W69WGATNL.jpg)
++ プログラミング言語C  
+<img src="http://ecx.images-amazon.com/images/I/41W69WGATNL.jpg" width='200'>
 + Head First C
-![Head First C](http://www.oreilly.co.jp/books/images/picture_large978-4-87311-609-9.jpeg)
+<img src="http://www.oreilly.co.jp/books/images/picture_large978-4-87311-609-9.jpeg" width='200'>
 + 詳説Cポインタ
-![詳説Cポインタ](http://www.oreilly.co.jp/books/images/picture_large978-4-87311-656-3.jpeg)
+<img src="http://www.oreilly.co.jp/books/images/picture_large978-4-87311-656-3.jpeg" width='200'>
 + エキスパートCプログラミング―知られざるCの深層
-![エキスパートCプログラミング-知られざるCの深層](http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg)
+<img src="http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg" width='200'>
 
