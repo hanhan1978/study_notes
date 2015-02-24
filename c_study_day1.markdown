@@ -174,21 +174,56 @@ StackOverFlowとは、スタックが積み上がりすぎて用意したアド�
 + コード  
 ソースコードとかが読み込まれている空間です。
 
+![仮想アドレス空間](https://github.com/hanhan1978/study_notes/blob/master/memory.png)
+
 C言語を実装する時に、最も多く発生するエラーは、`Segmentation Fault`です。  
 上記のアドレス空間は、それぞれがセグメントと呼ばれます。  
 
 `Segmentation Fault`とは、実行中のプログラムが権限の無いアドレス空間・メモリ領域に触れようとしたことを指します。  
-
-[メモリ領域の図]
 
 
 ## 演習問題2 
 (1) 次のプログラムを写経して下さい。  
 コピペしないで下さい。一文字一文字心を込めて打ち込んで下さい。
 ```
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int glob1 = 123;
+int glob2;
+
+int main(){
+
+    static int st1 = 123;
+    static int st2;
+    int local = 0;
+
+    static char static_array[1024];
+    char local_array[1024];
+    char * dynamic_array;
+
+    dynamic_array = (char *)malloc(1024);
+
+    printf("----------- VAL -----------\n");
+    printf("glob1   =>  %p\n", &glob1);
+    printf("glob2   =>  %p\n", &glob2);
+    printf("st1     =>  %p\n", &st1);
+    printf("st2     =>  %p\n", &st2);
+    printf("local   =>  %p\n", &local);
+    printf("----------- ARR -----------\n");
+    printf("static  =>  %p\n", static_array);
+    printf("local   =>  %p\n", local_array);
+    printf("dynamic =>  %p\n", dynamic_array);
+    printf("----------- FUNC ----------\n");
+    printf("main    =>  %p\n", main);
+    printf("printf  =>  %p\n", printf);
+}
 ```
 
 (2) それぞれの変数が、メモリ領域のどこに存在するのか考えて下さい。
+
+※malloc関数は、ヒープに領域を確保する関数です。
 
 ## 思考練習
 下記のPHPのコードで、同様に考えてみましょう。
@@ -199,7 +234,8 @@ C言語を実装する時に、最も多く発生するエラーは、`Segmentat
 class Animal {
 
     function createDog(){
-        return new Dog();  //Dogクラスのインスタンスの参照を返す。
+        $a = 4;
+        return new Dog($a);  //Dogクラスのインスタンスの参照を返す。
     }
 
 }
@@ -214,8 +250,14 @@ function main(){
 
 ```
 
-モダンなプログラミング言語は、Garbage Collectionという機能で、メモリ領域に保持された領域を解放します。  
-もうお分かりになると思いますが、Garbage Collectionが解放を行うのは、メモリ領域の中の【○○○○】です。
+PHP, Ruby, Java等の最近の高級プログラミング言語は、関数がオブジェクトや文字列を参照で戻すことが出来ます。
+つまり、上記でnewされたオブジェクトや、関数実行後に呼び元にセットされたインスタンスは、ヒープに確保された領域内のデータです。
+
+しかし、ヒープの領域は明示的には解放されません。PHP, Ruby, Javaでは、C言語のfreeに相当する関数が提供されていません。
+ヒープの領域が解放されないままで残ると、解放されないメモリが徐々に溜まっていきます。これをメモリリークと呼びます。
+
+freeの代わりとして、これらの言語ではGarbage Collectionという機能が存在し、参照されなくなった変数やオブジェクトが含まれるヒープの領域を自動で解放します。
+
 
 # ポインタ
 C言語において、ポインタとはメモリアドレスを表現するものです。
@@ -301,8 +343,6 @@ int main(){
 大事なことなので、２度言います。  
 ポインターにおいて、最も重要なことは、**概念**だけでなく、**書き方**を正確に覚えるということです。
 
-非常に残念なことではありますが、伝統的なC言語プログラミングの書き方は副作用のある書き方が多いです。
-ポインターを相手関数に渡して、値をセットさせたりするので、値の変化を追うことが非常に難しいです。
 
 ## 演習問題2 
 (1) 下記のプログラムは、文字列のポインターを関数に渡して、値をセットさせるプログラムです。  
@@ -312,7 +352,8 @@ int main(){
 #include <stdio.h>
 
 void setTitle(char * title){
-    *title = "C Study";
+    char title2[] = "C Study";
+    title = title2;
 }
 
 int main(){
@@ -323,41 +364,58 @@ int main(){
 }
 ```
 
-### 重要なポイント
-+ 文字列リテラルの使い所  
-文字列リテラルをそのまま変数に代入できるのは、宣言時のみです。  
-僕らが使っている高級言語のように、カジュアルに代入出来ません。
-+ 配列は、ポインターのように振る舞います。  
-intの時は、&を付けましたが、引数に文字配列のポインターが求められる時は、&を付けずに指定します。  
-でも、配列は厳密にはポインターではないのです。（そんなの、今覚えなくていいです）
-+ 文字列に何らかの操作を行う時は、string.hを使いましょう  
-今回は、strcpyという関数を使って、`title`配列に値をコピーします。
+(2) プログラムを修正して、上手く動作するようにして下さい。
 
+ヒント
+1. `<string.h>`という共有ライブラリを追加でincludeする。
+2. 配列のポインタに、文字をコピーする時は、`strcpy`関数を使います。
 
-## 演習問題3
-(1) 副作用のあるソースコードは嫌なものです。そこで先のプログラムを修正して、文字列配列のポインターを戻すようにしてみました。  
-このプログラムは、コンパイル出来ますが、タイトル「C Study」が表示できません。何故でしょう？
+# 実習問題
+## 実習1 ポインタ
+main関数内で、2つの`int`型の変数x, yを宣言して下さい。初期値は0です。
+引数に2つのintのポインタを受け取る関数、goNorthとgoEastを作って下さい。
+
+goNorthが呼ばれた場合は、yに1を足して下さい。
+goEastが呼ばれた場合は、xに1を足して下さい。
+
+goNorthを4回、goEastを3回実行した後、最後に変数x, yの内容を出力して下さい。
+
+答え
 
 ```
-#include <stdio.h>
-#include <string.h>
-
-char * getTitle(){
-    char title[10] = "C Study";
-    return title;
-}
-
-int main(){
-    char * title = getTitle();
-    printf("title is %s\n", title);
-}
+x = 3;
+y = 4;
 ```
+
+## 実習2 配列ポインタ
+
+文字列`ABCDE`を格納する文字列の配列を定義して下さい。
+配列のポインタを利用して、先頭文字から順番に、全て小文字にして下さい。
+
+最後に配列内容を出力して、`abcde`になることを確認して下さい。
+
+### ヒント
++ char 'A' に +32すると小文字になります。
++ 配列の先頭文字のアドレスは配列変数そのものです。
++ 先頭文字のアドレスに+1すると、配列の2つ目のアドレスです。
+
+## 実習3
+`pwd`コマンドを自作してみましょう。
+
+カレントディレクトリを取得する関数は、`getcwd`関数です。
+`getcwd`のマニュアルは、`man getcwd`でチェック出来ます。
+
+マニュアルの内容に従って、カレントディレクトリ取得して、表示するコマンドを作って下さい。
 
 # 参考図書
 hanhan1978が学習に用いた本達です。良書厳選。
 
 + プログラミング言語C
+![プログラミング言語C](http://ecx.images-amazon.com/images/I/41W69WGATNL.jpg)
 + Head First C
-+ 詳解ポインター
+![Head First C](http://www.oreilly.co.jp/books/images/picture_large978-4-87311-609-9.jpeg)
++ 詳説Cポインタ
+![詳説Cポインタ](http://www.oreilly.co.jp/books/images/picture_large978-4-87311-656-3.jpeg)
 + エキスパートCプログラミング―知られざるCの深層
+![エキスパートCプログラミング-知られざるCの深層](http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg)
 
