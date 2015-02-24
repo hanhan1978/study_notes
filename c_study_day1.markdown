@@ -208,48 +208,20 @@ intの時は、&を付けましたが、引数に文字配列のポインター�
 
 ## 演習問題3
 (1) 副作用のあるソースコードは嫌なものです。そこで先のプログラムを修正して、文字列配列のポインターを戻すようにしてみました。  
-このプログラムは、コンパイル出来ますが、`Segmentation Fault`が発生します。何故でしょう？
-
-```
-```
-
-## printf演算演習
-(1) 下記を写経して下さい。
+このプログラムは、コンパイル出来ますが、タイトル「C Study」が表示できません。何故でしょう？
 
 ```
 #include <stdio.h>
+#include <string.h>
 
-int main(){
-
-    int a = 5;
-    printf("int a = %d\n", a);
-
-    char str[] = "bowow";
-    printf("char str[] = %s\n", str);
-
+char * getTitle(){
+    char title[10] = "C Study";
+    return title;
 }
-```
-
-作成したファイルは`print.c`という名前で保存して下さい。
-
-(2) コンパイルして、実行してみて下さい。  
-`gcc -o print print.c`
-
-(3) 以下のようにstr変数の文字列を書き換えてみて下さい。
-
-```
-#include <stdio.h>
 
 int main(){
-
-    int a = 5;
-    printf("int a = %d\n", a);
-
-    char str[] = "bowow";
-    printf("char str[] = %s\n", str);
-
-    str = "meow";
-    printf("char str[] = %s\n", str);
+    char * title = getTitle();
+    printf("title is %s\n", title);
 }
 ```
 
