@@ -244,7 +244,8 @@ int main(){
 
 address_check関数を実行すると、それぞれの変数のメモリアドレスが出力されます。
 
-+ `glob1`, `glob2`, `st1`, `st2`, `static配列`は定数セグメントです。
++ `glob1`, `glob2`はグローバルセグメントです。
++ `st1`, `st2`, `static配列`は定数セグメントです。
 + `local`, `local配列` 及び`main`はスタック領域です。
 + `dynamic配列`はヒープ領域です。
 + `printf`は共有ライブラリのコードです。
