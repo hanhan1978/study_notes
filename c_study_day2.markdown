@@ -310,7 +310,7 @@ C言語では、言語自体がサポートするデータ型が少ないので�
 ## 演習問題 3-1 片方向リンクドリスト
 もっとも単純なデータ構造として、片方向のリンクドリストを作成します。
 
-[!片方向リンクドリスト](http://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Singly-linked-list.svg/408px-Singly-linked-list.svg.png)
+![片方向リンクドリスト](http://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Singly-linked-list.svg/408px-Singly-linked-list.svg.png)
 [連結リスト - wikipedia](http://ja.wikipedia.org/wiki/%E9%80%A3%E7%B5%90%E3%83%AA%E3%82%B9%E3%83%88)より
 
 ```
