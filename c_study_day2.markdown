@@ -318,40 +318,50 @@ C言語では、言語自体がサポートするデータ型が少ないので�
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct linkedlist {
+typedef struct linkedList {
     int value;
-    struct linkedlist * next;
-} linkedlist;
+    struct linkedList * next;
+} linkedList;
 
-struct linkedlist * createList(int value){
+struct linkedList * createList(int value){
 
-    struct linkedlist * list = (struct linkedlist *) malloc (sizeof(struct linkedlist));
+    struct linkedList * list = (struct linkedList *) malloc (sizeof(struct linkedList));
     list->value = value; 
-    list->next = (struct linkedlist *) malloc (sizeof(struct linkedlist));
+    list->next = NULL; 
 
     return list;
 }
 
-void printList(struct linkedlist * list){
-    struct linkedlist * current;
+void addList(struct linkedList * list, int value){
 
+    struct linkedList * current;
     current = list;
     while(current->next != NULL){
+        current = current->next;
+    }
+    current->next = createList(value);
+}
+
+void printList(struct linkedList * list){
+    struct linkedList * current;
+    current = list;
+    while(1){
         printf("value = %d\n", current->value);
+        if(current->next == NULL){
+            break;
+        }
         current = current->next;
     }
 }
 
 int main(){
 
-    struct linkedlist * first  = createList(8);
-    struct linkedlist * second = createList(55);
-    struct linkedlist * third  = createList(21);
-    
-    first->next = second;
-    second->next = third;
+    struct linkedList * list  = createList(15);
+    addList(list, 22);
+    addList(list, 5);
+    addList(list, 8);
 
-    printList(first);
+    printList(list);
 }
 ```
 
@@ -359,7 +369,7 @@ int main(){
 + `gcc -o ex3-1 ex3-1.c`でコンパイルして下さい。
 + 実行ファイル`ex3-1`を実行して下さい。
 
-## 演習問題4-2 再帰的に片方向リストをfreeする関数を作って下さい。
+## 演習問題3-2 再帰的に片方向リストをfreeする関数を作って下さい。
 演習問題2と同じようにfreeが足りていません。
 片方向リストを再帰的にfreeする関数を作ってみて下さい。
 
@@ -498,6 +508,37 @@ int getTax();
 ある程度の規模のCプログラムであれば、必ずヘッダーファイルを作る・・・と思います。
 ヘッダーファイルを用意することで、複数のファイルから、関数を呼び出すことが可能となります。
 
+# 今日のおさらい用問題 バブルソート
+ここまでで、C言語の基本的な文法、お作法、ポインター、構造体まで学習しました。
+
+おさらいとして、もっとも単純なソートアルゴリズムであるバブルソートを実装しましょう。
+Cの配列を使っても良いのですが、おさらいとして、本日作成した単方向リストを使って実装しましょう。
+
+1から実装するのは、何なので演習問題3-2をベースに作って行きます。
+
+## ところで、バブルソートとは？
+任意のコレクションのN番目の値と、N+1番目の値を比較して、大きければ値を入れ替えるソートアルゴリズムです。
+大きい値が次々とコレクションの後方にソートされていく様を水の中を浮き上がる泡に例えています。
+
+## 入力値
+入力値は、演習3-1と同様とします。つまり・・・   
+`15, 22, 5, 8`の順番に並んでいます。
+
+`sortList`という名前の関数を作成して下さい。
+`printList`の手前で`sortList`を呼び出して、`LinkedList`をソートします。
+
+## 出力値
+`5, 8, 15, 22`の順番に出力されたら正解です！
+
+## 考え方のヒント
+バブルソートの処理を順に考えると、LinkedListの値は、以下の様な順番で並び替わって行きます。
+
++ `15, 22, 5, 8`
++ `15, 5, 22, 8`
++ `15, 5, 8, 22`
++ `5, 15, 8, 22`
++ `5, 8, 15, 22`
+
 # 参考図書
 hanhan1978が学習に用いた本達です。良書厳選。
 
@@ -509,5 +550,34 @@ hanhan1978が学習に用いた本達です。良書厳選。
 <img src="http://www.oreilly.co.jp/books/images/picture_large978-4-87311-656-3.jpeg" width='200'>
 + エキスパートCプログラミング―知られざるCの深層  
 <img src="http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg" width='200'>
-+ 定本 Cプログラマのためのアルゴリズムとデータ構造 
++ 定本 Cプログラマのためのアルゴリズムとデータ構造   
 <img src="http://ecx.images-amazon.com/images/I/715glL2PTZL.jpg" width='200'>
+
+
+# ソート関数の実装例
+
+```
+int sortList(struct linkedList * list){
+    struct linkedList * cur;
+    struct linkedList * nex;
+    cur = list;
+    int changed = 0; 
+    while(1){
+        nex = cur->next;
+        if(nex == NULL){
+            break;
+        }
+        if(cur->value > nex->value){
+            int tmp = cur->value;
+            cur->value = nex->value;
+            nex->value = tmp;
+            changed = 1;
+        }
+        cur = nex; 
+    }
+    if (changed){
+        sortList(list);
+    }
+    return 0;
+}
+```
