@@ -553,8 +553,40 @@ hanhan1978が学習に用いた本達です。良書厳選。
 + 定本 Cプログラマのためのアルゴリズムとデータ構造   
 <img src="http://ecx.images-amazon.com/images/I/715glL2PTZL.jpg" width='200'>
 
+# 演習問題の実装例
 
-# ソート関数の実装例
+## 演習問題2-2
+受け取った構造体の中身を１つずつfreeします。  
+最後に構造体そのものもfreeします。
+
+```
+void freeAnimal(struct animal * an){
+    free(an->type);
+    free(an->voice);
+    free(an);
+}
+```
+## 演習問題3-2
+LinkedListを順番にfreeしていきます。  
+次の構造体のポインタを取得したら、現在の構造体のメモリ空間を解放します。
+
+```
+void freeList(struct linkedList * list){
+    struct linkedList * cur;
+    struct linkedList * nex;
+    cur = list;
+    while(1){
+        nex = cur->next;
+        free(cur);
+        if(nex == NULL){
+            break;
+        }
+        cur = nex;
+    }
+}
+```
+
+## ソート関数の実装例
 
 ```
 int sortList(struct linkedList * list){
