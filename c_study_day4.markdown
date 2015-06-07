@@ -196,35 +196,292 @@ lldb basic
 + gdb
 ```
 (gdb) info breakpoints
++ lldb
+```
+5. 次のbreakpointまで実行する。
++ gdb
+```
+(gdb) continue 
+```
++ lldb
+6. breakpointを削除する。
++ gdb
+```
+(gdb) delete 1
+```
++ lldb
+7. breakpointを全部削除する。
++ gdb
+```
+(gdb) clear
+```
++ lldb
+
+### 演習2-3 関数でブレークポイントを設定する
+1. デバッガを起動する。
++ gdb
+```
+sudo gdb basic
+```
++ lldb
+```
+lldb basic
 ```
 
-5. 次のbreakpointまで実行する。
+2. 関数名でbreakpointを設定する。
++ gdb
+```
+(gdb) break basic.c:add
+```
+3. プログラムを実行する
++ gdb
+```
+(gdb) run
+```
++ lldb
+```
+(lldb) run
+```
+4. 次のbreakpointまで実行する。
++ gdb
 ```
 (gdb) continue 
 ```
 
-6. breakpointを削除する。
-```
-(gdb) delete 1
-```
-7. breakpointを全部削除する。
-```
-(gdb) clear
-```
-
-### 演習2-3 関数でブレークポイントを設定する
-1. デバッガを起動する。
-
-2. 関数名でbreakpointを設定する。
-
 ### 演習2-4 変数の中身を見る
+1. デバッガを起動する。
++ gdb
+```
+sudo gdb basic
+```
++ lldb
+```
+lldb basic
+```
+2. 関数名でbreakpointを設定する。
++ gdb
+```
+(gdb) break basic.c:add
+```
+3. プログラムを実行する
++ gdb
+```
+(gdb) run
+```
++ lldb
+```
+(lldb) run
+```
+4. 変数の中身を表示する。 
++ gdb
+```
+(gdb) print x 
+(gdb) print y 
+```
+5. 途中で実行を辞める
++ gdb
+```
+(gdb) kill 
+```
+ダイアログが出るので、`y`タイプ
 
 ### 演習2-5 変数の変更を監視する
+1. デバッガを起動する。
++ gdb
+```
+sudo gdb basic
+```
++ lldb
+```
+lldb basic
+```
+2. 10行目でbreakpointを設定する。
++ gdb
+```
+(gdb) break basic.c:10 
+```
+3. プログラムを実行する。 
++ gdb
+```
+(gdb) run 
+```
+4. watchポイントを変数aに設定する。 
++ gdb
+```
+(gdb) watch a 
+```
++ lldb
+```
+```
+5. プログラムを再開する。
++ gdb
+```
+(gdb) continue 
+```
+※この後は、continueを何回か叩いて、変数aが変更されるたびにデバッガが停止することを確認して下さい。
 
-## 演習3 gdbを使った他人のコードのデバッグ
+## 演習3 gdbを使ったコードのデバッグ
+下記のソースコードは、バブルソートのアルゴリズムを実装しています。
+実行結果は、123456789とソートされているべきですが、何故か結果がおかしいです。
+
+gdb, lldbを使って、不具合が起こっている箇所を洗い出して下さい。
+```
+#include <stdio.h>
+
+void printResult(int * arr);
+int * sort(int * arr);
+
+int main(){
+
+    int arr[9] = {9, 8, 4, 3, 7, 6, 5, 2, 1};
+
+    sort(arr);
+    printResult(arr);
+}
 
 
+
+int * sort(int * arr){
+    int size = sizeof(arr);
+
+    for(int i = 0; i + 1 < size; i++){
+        for(int k = 0; k + 1 < size ; k++){
+            int tmp = arr[k];
+            if(arr[k] > arr[k+1]){
+                arr[k] = arr[k+1];
+                arr[k+1] = tmp;
+            }
+        }
+    }
+    return arr;
+}
+
+
+void printResult(int * arr){
+    int size = sizeof(arr);
+
+    for(int i=0; i < size; i++){
+        printf("%d ",  arr[i]);
+    }
+        printf("\n");
+}
+```
 
 # 5. gdbとcoredump
+coredumpという単語を聞いたことがあるでしょうか？
+LinuxOSは、SIGQUITシグナルを受け取ると、プロセスのその時点でのメモリ情報、CPUのレジスタの情報などをファイルに出力します。
 
+よく、coreを吐くなんていう表現をします。
+どうしようもない状態というイメージもありますが、異常処理が正常に行われた結果なので、それほど致命的ではないと思います。
+kernel panicとかよりは、ずっとマシかと。
+
+本題はここからですが、coredumpはgdbの入力ファイルとして使えます。
+つまり、coredumpとプログラムとgdbがあれば、何故coreが吐かれたのかをチェックできます。
+
+Webエンジニアに馴染みのあるところだと、apacheがcoreを吐いて止まる時は、これで解析できます。
+=> 解析できることと、解決できることの間には大分開きがあります。
+
+## 演習4-1 core出力の設定を行う。
+1. 設定をチェックする。  
+```
+ulimit -a
+```
+`core file size`という項目の値をチェックします。`0`の場合は`core file`のサイズが0なのでcoreは出力されません。
+
+2. core fileを出力するように設定する。  
+```
+ulimit -c unlimited
+```
+3. 再度設定をチェックする。  
+```
+ulimit -a
+```
+`core file size`が`unlimited`になっていればOK
+
+### ulimitについて
+今回の演習では、一時的に設定を変える方法を取っていますが、初期設定を`unlimited`にすることも可能です。
++ Macの場合  
+`/etc/launched.conf`を作成し、設定項目を追加します。
++ Linuxの場合  
+`/etc/limits.conf`の中身を編集します。
+
+編集した結果として、`core`フィアルでディスク容量が一杯になったりします。  
+基本的には不具合を調査するための一時的な変更に留めるべきと思います。
+
+## 演習4-2 coreファイルからdebugする。
+
+以下のプログラムをコンパイルして、実行可能ファイルを作成します。
+文字列を逆順に並べ替えて、表示するプログラムです。
+
+```
+#include <stdio.h>
+
+/*
+ * この関数で文字列を逆順に並び替えています。
+ */
+char * reverse( char * str){
+    char temp;
+    int i = 0;
+    temp = str[i];
+    while(temp != '\0' ){
+        temp = str[++i];
+    }
+
+    char * rev;
+
+    for(int j = 0; j < i ; j++){
+        rev[i-j-1] = str[j];
+    }
+
+    return rev;
+}
+
+int main(){
+   char str[] = "!uoy knaht !dehsinif no sdnah gnaL C";
+   char * rev = reverse(str);
+
+   printf("%s \n", rev);
+}
+```
+
+1. コンパイルする  
+```
+gcc -o reverse -g -O0 reverse.c
+```
+※ reverseという名前で実行可能ファイルが出来ていることを確認して下さい。
+2. 実行し、coredumpを出力させる。
+```
+./reverse
+```
+3. coreファイルを確認する。
+```
+ls -l /cores
+```
+4. coreファイルを指定して、デバッガを起動する。
++ gdbの場合
+```
+sudo gdb ./reverse /cores/core.31003 -tui
+```
++ lldbの場合
+```
+lldb ./reverse /cores/core.31003
+```
+5. 実行する。
++ gdbの場合
+```
+(gdb) run
+(gdb) where
+```
++ lldbの場合
+```
+(lldb) run
+```
+
+
+# 参考書籍
+
++ エキスパートCプログラミング―知られざるCの深層  
+<img src="http://ecx.images-amazon.com/images/I/31LMc%2BpC7iL._SY344_BO1,204,203,200_.jpg" width='200'>
++ 実践 デバッグ技法 ―GDB、DDD、Eclipseによるデバッギング - Norman Matloff, Peter Salzman, 相川愛三(訳)  
+<img src="http://ecx.images-amazon.com/images/I/51wdCVEYCWL.jpg" width='200'>
 
