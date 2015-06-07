@@ -110,7 +110,7 @@ gcc -o macro macro.c
 ```
 #define eprintf(...) {} 
 ```
-### 4. 再度、コンパイルして実行して下さい。
+### 4. 再度、コンパイルして実行
 ```
 gcc -o macro macro.c
 ./macro
@@ -123,15 +123,15 @@ gcc -o macro macro.c
 まず、デバッガを使う際の基本ですが、デバッグのための追加情報を実行可能ファイルに付加する必要があります。
 
 ## デバッグのための`gcc`オプション
-+ `-g`
++ `-g`  
 helpの内容をそのまま書くと  
 `Generate source-level debug information`です。  
 つまり、デバッグ情報を実行可能ファイルに付与してくれます。
 
 gccでは、`-g3`とするとgdb内でmacroも使えて便利らしいですが、clang(mac標準)ではg3もgも同じだそうです。
 
-+ `-O0`
-Optimizationを0という意味です。 
++ `-O0`  
+Optimizationを0という意味です。  
 最適化をしないので、デバッグがしやすくなります。
 
 とりあえず、上の２つのオプションをコンパイル時に指定しましょう。
@@ -170,13 +170,13 @@ int main(){
 }
 ```
 
-### 演習2-1 デバッガの起動〜プログラム実行〜終了
+## 演習2-1 デバッガの起動〜プログラム実行〜終了
 
-1. デバッグ用にコンパイルする。
+### 1. デバッグ用にコンパイルする。
 ```
 gcc -g -O0 basic.c -o basic
 ```
-2. デバッガを起動する
+### 2. デバッガを起動する
 + gdb
 ```
 sudo gdb basic
@@ -185,7 +185,7 @@ sudo gdb basic
 ```
 lldb basic
 ```
-3. プログラムを実行する。
+### 3. プログラムを実行する。
 + gdb
 ```
 (gdb) run
@@ -194,7 +194,7 @@ lldb basic
 ```
 (lldb) run
 ```
-4. デバッガを終了する。
+### 4. デバッガを終了する。
 + gdb
 ```
 (gdb) quit
@@ -204,8 +204,8 @@ lldb basic
 (lldb) quit
 ```
 
-### 演習2-2 行数でブレークポイントを設定する
-1. デバッガを起動する
+## 演習2-2 行数でブレークポイントを設定する
+### 1. デバッガを起動する
 + gdb
 ```
 sudo gdb basic
@@ -214,7 +214,7 @@ sudo gdb basic
 ```
 lldb basic
 ```
-2. 行番号をチェックする。
+### 2. 行番号をチェックする。
 + gdb
 ```
 (gdb) list basic.c:1,25
@@ -224,7 +224,7 @@ lldb basic
 (lldb) list basic:1
 ```
 ※lldbでは、開始行数しか指定出来なかった・・・
-3. 行にbreakpointをセットする。
+### 3. 行にbreakpointをセットする。
 + gdb
 ```
 (gdb) break basic.c:10
@@ -235,7 +235,7 @@ lldb basic
 (lldb) breakpoint set --file basic.c --line 10 
 (lldb) b basic.c:12 
 ```
-4. breakpointをチェックする
+### 4. breakpointをチェックする
 + gdb
 ```
 (gdb) info breakpoints
@@ -246,7 +246,7 @@ lldb basic
 (lldb) breakpoint list 
 (lldb) br l
 ```
-5. 次のbreakpointまで実行する。
+### 5. 次のbreakpointまで実行する。
 + gdb
 ```
 (gdb) continue 
@@ -255,7 +255,7 @@ lldb basic
 ```
 (lldb) continue 
 ```
-6. 次の行へ行く
+### 6. 次の行へ行く
 + gdb
 ```
 (gdb) step 
@@ -265,7 +265,7 @@ lldb basic
 (lldb) thread step-in 
 (lldb) step 
 ```
-7. 次の行へ行く(スタックの中には入らない)
+### 7. 次の行へ行く(スタックの中には入らない)
 + gdb
 ```
 (gdb) next 
@@ -275,7 +275,7 @@ lldb basic
 (lldb) thread step-over
 (lldb) next 
 ```
-8. breakpointを削除する。
+### 8. breakpointを削除する。
 + gdb
 ```
 (gdb) delete 1
@@ -286,8 +286,8 @@ lldb basic
 (lldb) br del 1 
 ```
 
-### 演習2-3 関数でブレークポイントを設定する
-1. デバッガを起動する。
+## 演習2-3 関数でブレークポイントを設定する
+### 1. デバッガを起動する。
 + gdb
 ```
 sudo gdb basic
@@ -297,7 +297,7 @@ sudo gdb basic
 lldb basic
 ```
 
-2. 関数名でbreakpointを設定する。
+### 2. 関数名でbreakpointを設定する。
 + gdb
 ```
 (gdb) break basic.c:add
@@ -307,7 +307,7 @@ lldb basic
 (lldb) breakpoint set --name add
 (lldb) b add
 ```
-3. プログラムを実行する
+### 3. プログラムを実行する
 + gdb
 ```
 (gdb) run
@@ -316,7 +316,7 @@ lldb basic
 ```
 (lldb) run
 ```
-4. 次のbreakpointまで実行する。
+### 4. 次のbreakpointまで実行する。
 + gdb
 ```
 (gdb) continue 
@@ -326,8 +326,8 @@ lldb basic
 (lldb) continue 
 ```
 
-### 演習2-4 変数の中身を見る
-1. デバッガを起動する。
+## 演習2-4 変数の中身を見る
+### 1. デバッガを起動する。
 + gdb
 ```
 sudo gdb basic
@@ -336,7 +336,7 @@ sudo gdb basic
 ```
 lldb basic
 ```
-2. 関数名でbreakpointを設定する。
+### 2. 関数名でbreakpointを設定する。
 + gdb
 ```
 (gdb) break basic.c:add
@@ -345,7 +345,7 @@ lldb basic
 ```
 (lldb) b add
 ```
-3. プログラムを実行する
+### 3. プログラムを実行する
 + gdb
 ```
 (gdb) run
@@ -354,7 +354,7 @@ lldb basic
 ```
 (lldb) run
 ```
-4. 変数の中身を表示する。 
+### 4. 変数の中身を表示する。 
 + gdb
 ```
 (gdb) print x 
@@ -365,7 +365,7 @@ lldb basic
 (lldb) print x 
 (lldb) print y 
 ```
-5. 途中で実行を辞める
+### 5. 途中で実行を辞める
 + gdb
 ```
 (gdb) quit 
@@ -377,8 +377,8 @@ lldb basic
 ```
 ダイアログが出るので、`y`タイプ
 
-### 演習2-5 変数の変更を監視する
-1. デバッガを起動する。
+## 演習2-5 変数の変更を監視する
+### 1. デバッガを起動する。
 + gdb
 ```
 sudo gdb basic
@@ -387,7 +387,7 @@ sudo gdb basic
 ```
 lldb basic
 ```
-2. 10行目でbreakpointを設定する。
+### 2. 10行目でbreakpointを設定する。
 + gdb
 ```
 (gdb) break basic.c:10 
@@ -396,7 +396,7 @@ lldb basic
 ```
 (lldb) b basic.c:12 
 ```
-3. プログラムを実行する。 
+### 3. プログラムを実行する。 
 + gdb
 ```
 (gdb) run 
@@ -405,7 +405,7 @@ lldb basic
 ```
 (lldb) run 
 ```
-4. watchポイントを変数aに設定する。 
+### 4. watchポイントを変数aに設定する。 
 + gdb
 ```
 (gdb) watch a 
@@ -414,7 +414,7 @@ lldb basic
 ```
 (lldb) watchpoint set variable a
 ```
-5. プログラムを再開する。
+### 5. プログラムを再開する。
 + gdb
 ```
 (gdb) continue 
@@ -472,18 +472,18 @@ void printResult(int * arr){
 }
 ```
 
-1. コンパイルする。
+### 1. コンパイルする。
 `sort.c`という名前でファイルを保存し、コンパイルします。
 コンパイルコマンドは下記です。
 ```
 gcc -g -O0 -o sort sort.c
 ```
-2. 実行する
+### 2. 実行する
 ```
 sort
 ```
 結果がおかしいことを確認する。
-3. デバッガで実行する。
+### 3. デバッガで実行する。
 + gdb
 ```
 sudo gdb sort -tui
@@ -492,7 +492,7 @@ sudo gdb sort -tui
 ```
 lldb sort
 ```
-4. 怪しいと思える場所に、breakpointを設定して調べる
+### 4. 怪しいと思える場所に、breakpointを設定して調べる
 => 試しに色々と探してみて下さい。
 
 # 4. gdbとcoredump
@@ -510,17 +510,17 @@ Webエンジニアに馴染みのあるところだと、apacheがcoreを吐い�
 => 解析できることと、解決できることの間には大分開きがあります。
 
 ## 演習4-1 core出力の設定を行う。
-1. 設定をチェックする。  
+### 1. 設定をチェックする。  
 ```
 ulimit -a
 ```
 `core file size`という項目の値をチェックします。`0`の場合は`core file`のサイズが0なのでcoreは出力されません。
 
-2. core fileを出力するように設定する。  
+### 2. core fileを出力するように設定する。  
 ```
 ulimit -c unlimited
 ```
-3. 再度設定をチェックする。  
+### 3. 再度設定をチェックする。  
 ```
 ulimit -a
 ```
@@ -572,20 +572,20 @@ int main(){
 }
 ```
 
-1. コンパイルする  
+### 1. コンパイルする  
 ```
 gcc -o reverse -g -O0 reverse.c
 ```
 ※ reverseという名前で実行可能ファイルが出来ていることを確認して下さい。
-2. 実行し、coredumpを出力させる。
+### 2. 実行し、coredumpを出力させる。
 ```
 ./reverse
 ```
-3. coreファイルを確認する。
+### 3. coreファイルを確認する。
 ```
 ls -l /cores
 ```
-4. coreファイルを指定して、デバッガを起動する。
+### 4. coreファイルを指定して、デバッガを起動する。
 + gdbの場合
 ```
 sudo gdb ./reverse /cores/core.31003 -tui
@@ -594,7 +594,7 @@ sudo gdb ./reverse /cores/core.31003 -tui
 ```
 lldb ./reverse /cores/core.31003
 ```
-5. 実行する。
+### 5. 実行する。
 + gdbの場合
 ```
 (gdb) run
