@@ -221,7 +221,7 @@ lldb basic
 ```
 + lldb
 ```
-(lldb) list basic:1
+(lldb) list basic.c:1
 ```
 ※lldbでは、開始行数しか指定出来なかった・・・
 ### 3. 行にbreakpointをセットする。
@@ -246,7 +246,16 @@ lldb basic
 (lldb) breakpoint list 
 (lldb) br l
 ```
-### 5. 次のbreakpointまで実行する。
+### 5. プログラムを実行する
++ gdb
+```
+(gdb) run
+```
++ lldb
+```
+(lldb) run
+```
+### 6. 次のbreakpointまで実行する。
 + gdb
 ```
 (gdb) continue 
@@ -255,7 +264,7 @@ lldb basic
 ```
 (lldb) continue 
 ```
-### 6. 次の行へ行く
+### 7. 次の行へ行く
 + gdb
 ```
 (gdb) step 
@@ -265,7 +274,7 @@ lldb basic
 (lldb) thread step-in 
 (lldb) step 
 ```
-### 7. 次の行へ行く(スタックの中には入らない)
+### 8. 次の行へ行く(スタックの中には入らない)
 + gdb
 ```
 (gdb) next 
@@ -275,7 +284,7 @@ lldb basic
 (lldb) thread step-over
 (lldb) next 
 ```
-### 8. breakpointを削除する。
+### 9. breakpointを削除する。
 + gdb
 ```
 (gdb) delete 1
@@ -565,7 +574,7 @@ char * reverse( char * str){
 }
 
 int main(){
-   char str[] = "!uoy knaht !dehsinif no sdnah gnaL C";
+   char str[] = "gnaL C";
    char * rev = reverse(str);
 
    printf("%s \n", rev);
