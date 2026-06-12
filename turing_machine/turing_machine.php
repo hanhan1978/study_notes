@@ -125,6 +125,8 @@ class TuringMachine
         $this->delta = $delta;
         $this->initialState = $initialState;
         $this->finalStates = $finalStates;
+
+        $this->validateMachineDefinition();
     }
 
     public function run(string $input, bool $trace = true, int $maxSteps = 10000): string
@@ -158,6 +160,7 @@ class TuringMachine
                 throw new RuntimeException('最大ステップ数を超えました。無限ループの可能性があります。');
             }
 
+            $currentState = $state;
             $symbol = $tape->read($head);
             if (!isset($this->delta[$state][$symbol])) {
                 throw new RuntimeException(sprintf('遷移が定義されていません: state=%s, symbol=%s', $state, $symbol));
@@ -181,7 +184,7 @@ class TuringMachine
                 printf(
                     "step %2d  state=%s  read=%s write=%s move=%s next=%s  tape=%s\n",
                     $step,
-                    $state,
+                    $currentState,
                     $symbol,
                     $writeSymbol,
                     $move,
@@ -194,16 +197,66 @@ class TuringMachine
 
     private function validateInput(string $input): void
     {
-        if ($input === '') {
-            throw new InvalidArgumentException('入力は空にできません。');
+        $chars = preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY);
+        if ($chars === false) {
+            throw new RuntimeException('入力を分解できませんでした。');
         }
 
-        if (!preg_match('/^[1+]+$/', $input)) {
-            throw new InvalidArgumentException('入力は `1` と `+` だけで構成してください。');
+        foreach ($chars as $char) {
+            if (!in_array($char, $this->inputAlphabet, true)) {
+                throw new InvalidArgumentException(sprintf('入力記号 `%s` はΣに含まれていません。', $char));
+            }
+        }
+    }
+
+    private function validateMachineDefinition(): void
+    {
+        if (!in_array($this->blankSymbol, $this->alphabet, true)) {
+            throw new InvalidArgumentException('空白記号はΓに含まれていなければなりません。');
         }
 
-        if (substr_count($input, '+') !== 1) {
-            throw new InvalidArgumentException('`+` はちょうど1個必要です。');
+        if (!in_array($this->initialState, $this->states, true)) {
+            throw new InvalidArgumentException('初期状態はQに含まれていなければなりません。');
+        }
+
+        foreach ($this->inputAlphabet as $symbol) {
+            if (!in_array($symbol, $this->alphabet, true)) {
+                throw new InvalidArgumentException(sprintf('入力記号 `%s` はΓに含まれていなければなりません。', $symbol));
+            }
+        }
+
+        foreach ($this->finalStates as $state) {
+            if (!in_array($state, $this->states, true)) {
+                throw new InvalidArgumentException(sprintf('受理状態 `%s` はQに含まれていなければなりません。', $state));
+            }
+        }
+
+        foreach ($this->delta as $state => $transitions) {
+            if (!in_array($state, $this->states, true)) {
+                throw new InvalidArgumentException(sprintf('遷移元状態 `%s` はQに含まれていなければなりません。', $state));
+            }
+
+            foreach ($transitions as $readSymbol => $transition) {
+                $readSymbol = (string)$readSymbol;
+
+                if (!in_array($readSymbol, $this->alphabet, true)) {
+                    throw new InvalidArgumentException(sprintf('遷移で読む記号 `%s` はΓに含まれていなければなりません。', $readSymbol));
+                }
+
+                [$writeSymbol, $move, $nextState] = $transition;
+
+                if (!in_array($writeSymbol, $this->alphabet, true)) {
+                    throw new InvalidArgumentException(sprintf('遷移で書く記号 `%s` はΓに含まれていなければなりません。', $writeSymbol));
+                }
+
+                if (!in_array($nextState, $this->states, true)) {
+                    throw new InvalidArgumentException(sprintf('遷移先状態 `%s` はQに含まれていなければなりません。', $nextState));
+                }
+
+                if (!in_array($move, ['L', 'R', 'N'], true)) {
+                    throw new InvalidArgumentException(sprintf('移動命令 `%s` は L/R/N のいずれかでなければなりません。', $move));
+                }
+            }
         }
     }
 }
@@ -233,6 +286,17 @@ function buildUnaryAdditionMachine(): TuringMachine
     );
 }
 
+function validateUnaryAdditionInput(string $input): void
+{
+    if ($input === '') {
+        throw new InvalidArgumentException('入力は空にできません。');
+    }
+
+    if (substr_count($input, '+') !== 1) {
+        throw new InvalidArgumentException('`+` はちょうど1個必要です。');
+    }
+}
+
 function formatUnaryAdditionSummary(string $input, string $result): string
 {
     $plusPos = strpos($input, '+');
@@ -252,6 +316,7 @@ function runUnaryAdditionCli(array $argv): int
     $machine = buildUnaryAdditionMachine();
 
     try {
+        validateUnaryAdditionInput($input);
         $result = $machine->run($input, true);
         echo formatUnaryAdditionSummary($input, $result) . PHP_EOL;
         return 0;

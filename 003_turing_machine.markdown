@@ -119,10 +119,12 @@ q2 --1/_,N--> halt
 step  0  state=q0  tape=[1] 1 1 + 1 1
 step  1  state=q0  read=1 write=1 move=R next=q0  tape=1 [1] 1 + 1 1
 step  2  state=q0  read=1 write=1 move=R next=q0  tape=1 1 [1] + 1 1
-step  3  state=q0  read=+ write=1 move=R next=q1  tape=1 1 1 [1] 1 1
-step  4  state=q1  read=1 write=1 move=R next=q1  tape=1 1 1 1 [1] 1
-...
-step  8  state=halt  read=1 write=_ move=N next=halt  tape=1 1 1 1 1 [_]
+step  3  state=q0  read=1 write=1 move=R next=q0  tape=1 1 1 [+] 1 1
+step  4  state=q0  read=+ write=1 move=R next=q1  tape=1 1 1 1 [1] 1
+step  5  state=q1  read=1 write=1 move=R next=q1  tape=1 1 1 1 1 [1]
+step  6  state=q1  read=1 write=1 move=R next=q1  tape=1 1 1 1 1 1 [_]
+step  7  state=q1  read=_ write=_ move=L next=q2  tape=1 1 1 1 1 [1]
+step  8  state=q2  read=1 write=_ move=N next=halt  tape=1 1 1 1 1 [_]
 結果: 11111 (3 + 2 = 5)
 ```
 
@@ -145,7 +147,8 @@ php turing_machine/turing_machine.php "1+1"
 ```
 
 入力は `1` と `+` だけを受け付けます。  
-`+` はちょうど1個必要です。
+`+` はちょうど1個必要です。  
+この単項加算専用の条件は、CLI側で確認しています。
 
 検証用の小さなPHPスクリプトも付けています。
 

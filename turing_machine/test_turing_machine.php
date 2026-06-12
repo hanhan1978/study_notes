@@ -43,7 +43,7 @@ assertThrows(
 );
 
 assertThrows(
-    fn () => $machine->run('111++1', false),
+    fn () => validateUnaryAdditionInput('111++1'),
     InvalidArgumentException::class,
     'multiple plus signs should be rejected'
 );
@@ -52,6 +52,16 @@ assertSameValue(
     '結果: 11111 (3 + 2 = 5)',
     formatUnaryAdditionSummary('111+11', '11111'),
     'summary formatter should show the operand sizes'
+);
+
+ob_start();
+$machine->run('111+11', true);
+$trace = ob_get_clean();
+
+assertSameValue(
+    true,
+    str_contains((string)$trace, 'step  4  state=q0  read=+ write=1 move=R next=q1'),
+    'trace should show the pre-transition state'
 );
 
 echo "All tests passed.\n";
