@@ -7,8 +7,8 @@
 ## 作成するファイル
 
 ```
-003_turing_machine.markdown        # 解説資料(ルート直下、001_make / 002_debug の連番に合わせる)
-turing_machine/turing_machine.php  # TM本体 + 単項加算のサンプル機械(依存なし、php コマンドだけで動く)
+turing_machine/001_turing_machine.markdown  # 解説資料
+turing_machine/turing_machine.php           # TM本体 + 単項加算のサンプル機械(依存なし、php コマンドだけで動く)
 ```
 
 ## 1. `turing_machine/turing_machine.php`
@@ -44,7 +44,7 @@ step 13  state=halt  1  1  1  1  1
 結果: 11111 (3 + 2 = 5)
 ```
 
-## 2. `003_turing_machine.markdown`(解説資料)
+## 2. `turing_machine/001_turing_machine.markdown`(解説資料)
 
 既存の c_study 資料と同じ調子(です・ます調、Webエンジニア向け、手を動かす形式)で書く。構成:
 

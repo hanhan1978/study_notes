@@ -216,7 +216,7 @@ gcc -o add main.o func.o
 このように、関数実体ではなく、共有ライブラリを参照する形式でのリンクを動的リンクと呼びます。
 
 リンクのイメージ図  
-![linkのイメージ](https://raw.githubusercontent.com/hanhan1978/study_notes/master/linkimage.png)
+![linkのイメージ](https://raw.githubusercontent.com/hanhan1978/study_notes/master/c_lang/linkimage.png)
 
 ハンズオン第一回のおさらいになりますが、以下のコマンドを実行して見てください。  
 動的リンクの共有ライブラリが表示されます。
