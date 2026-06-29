@@ -27,7 +27,7 @@
 + `gotoと名札`
 
 ## 仮想アドレス空間
-![仮想アドレス空間](https://raw.githubusercontent.com/hanhan1978/study_notes/master/memory.png)
+![仮想アドレス空間](https://raw.githubusercontent.com/hanhan1978/study_notes/master/c_lang/memory.png)
 今回のハンズオンでは、`ヒープ`を使います。
 
 ## ポインター
